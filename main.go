@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"todo_app_ud_golang/app/models"
 )
 
@@ -36,9 +35,14 @@ func main() {
 	// }
 
 	// ユーザーに紐づいたtodo取得
-	user2, _ := models.GetUser(2)
-	todos, _ := user2.GetTodosByUser()
-	for _, v := range todos {
-		fmt.Println(v)
-	}
+	// user2, _ := models.GetUser(2)
+	// todos, _ := user2.GetTodosByUser()
+	// for _, v := range todos {
+	// 	fmt.Println(v)
+	// }
+
+	// todo更新
+	t, _ := models.GetTodo(4)
+	t.Content = "Update Todo"
+	t.UpdateTodo()
 }
