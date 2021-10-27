@@ -42,7 +42,11 @@ func main() {
 	// }
 
 	// todo更新
-	t, _ := models.GetTodo(4)
-	t.Content = "Update Todo"
-	t.UpdateTodo()
+	// t, _ := models.GetTodo(4)
+	// t.Content = "Update Todo"
+	// t.UpdateTodo()
+
+	// todo削除
+	t, _ := models.GetTodo(5)
+	t.DeleteTodo()
 }
