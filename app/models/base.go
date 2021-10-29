@@ -16,8 +16,9 @@ var Db *sql.DB
 var err error
 
 const (
-	tableNameUser = "users"
-	tableNameTodo = "todos"
+	tableNameUser    = "users"
+	tableNameTodo    = "todos"
+	tableNameSession = "sessions"
 )
 
 func init() {
@@ -49,6 +50,17 @@ func init() {
 
 	Db.Exec(cmdT)
 
+	cmdS := fmt.Sprintf(`
+			create table if not exists %s(
+				id integer primary key autoincrement,
+				uuid string not null unique,
+				email string,
+				user_id integer,
+				created_at datetime
+			)
+	`, tableNameSession)
+
+	Db.Exec(cmdS)
 }
 
 // ユーザーにかかるユニークなID作成

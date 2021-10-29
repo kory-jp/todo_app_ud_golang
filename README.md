@@ -34,6 +34,8 @@ go run main.go
 
 ## lec 注意
 
+### lec137
+
 `app/views/template/public_navbar`において以下の{{}}に空白が含まれていないか注意
 
 ```
