@@ -52,6 +52,7 @@ func StartMainServer() error {
 	// "/authenticate"=viewsのformのactionを参照
 	http.HandleFunc("/authenticate", authenticate)
 	http.HandleFunc("/todos", index)
+	http.HandleFunc("/logout", logout)
 	// サーバーの起動
 	// 第二引数にnilを渡すと存在しないページにアクセスすると404ページを表示する
 	return http.ListenAndServe(":"+config.Config.Port, nil)
