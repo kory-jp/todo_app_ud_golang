@@ -31,3 +31,11 @@ go get gopkg.in/go-ini/ini.v1
 ```
 go run main.go
 ```
+
+## lec 注意
+
+`app/views/template/public_navbar`において以下の{{}}に空白が含まれていないか注意
+
+```
+{{define "navbar"}}
+```

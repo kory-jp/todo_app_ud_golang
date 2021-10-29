@@ -33,9 +33,9 @@ func StartMainServer() error {
 	// 第二引数にて上記で定義した静的ファイルを渡しWEB上で表示
 	http.Handle("/static/", http.StripPrefix("/static/", files))
 
-	// URL登録とroute_main.goのhandlerとの結び付け
+	// URL登録とroute_main.goのhandlerとの結び付け/railsのroute.rb
 	http.HandleFunc("/", top)
-
+	http.HandleFunc("/signup", signup)
 	// サーバーの起動
 	// 第二引数にnilを渡すと存在しないページにアクセスすると404ページを表示する
 	return http.ListenAndServe(":"+config.Config.Port, nil)

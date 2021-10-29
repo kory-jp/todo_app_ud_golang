@@ -14,5 +14,7 @@ func top(w http.ResponseWriter, r *http.Request) {
 	// Executeにてテンプレートファイルを実行,第二引数にはデータの引き渡し
 	// t.Execute(w, "Hello")
 
-	generateHTML(w, "Hello", "layout", "top")
+	// 引数には表示するHTMLパーツ、データを一覧揃える
+	generateHTML(w, "Hello", "layout", "public_navbar", "top")
+
 }
