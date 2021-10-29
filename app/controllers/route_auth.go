@@ -9,7 +9,12 @@ import (
 func signup(w http.ResponseWriter, r *http.Request) {
 	// ブラウザから送られてくるHTTPリクエストにより処理を分岐させる
 	if r.Method == "GET" {
-		generateHTML(w, nil, "layout", "public_navbar", "signup")
+		_, err := session(w, r)
+		if err != nil {
+			generateHTML(w, nil, "layout", "public_navbar", "signup")
+		} else {
+			http.Redirect(w, r, "/todos", 302)
+		}
 	} else if r.Method == "POST" {
 		// r.ParseForm=ブラウザから送られてきたデータの解析
 		err := r.ParseForm()
@@ -34,7 +39,12 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 // ログインページの表示
 func login(w http.ResponseWriter, r *http.Request) {
-	generateHTML(w, nil, "layout", "public_navbar", "login")
+	_, err := session(w, r)
+	if err != nil {
+		generateHTML(w, nil, "layout", "public_navbar", "login")
+	} else {
+		http.Redirect(w, r, "/todos", 302)
+	}
 }
 
 // ログイン機能実装

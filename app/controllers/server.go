@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"text/template"
+	"todo_app_ud_golang/app/models"
 	"todo_app_ud_golang/config"
 )
 
@@ -23,6 +24,17 @@ func generateHTML(w http.ResponseWriter, data interface{}, filenames ...string) 
 	templates.ExecuteTemplate(w, "layout", data)
 }
 
+func session(w http.ResponseWriter, r *http.Request) (sess models.Session, err error) {
+	cookie, err := r.Cookie("_cookie")
+	if err == nil {
+		sess = models.Session{UUID: cookie.Value}
+		if ok, _ := sess.CheckSession(); !ok {
+			err = fmt.Errorf("Invalid session")
+		}
+	}
+	return sess, err
+}
+
 func StartMainServer() error {
 	// Config.goのStatic(静的ファイル)を定義
 	files := http.FileServer(http.Dir(config.Config.Static))
@@ -39,6 +51,7 @@ func StartMainServer() error {
 	http.HandleFunc("/login", login)
 	// "/authenticate"=viewsのformのactionを参照
 	http.HandleFunc("/authenticate", authenticate)
+	http.HandleFunc("/todos", index)
 	// サーバーの起動
 	// 第二引数にnilを渡すと存在しないページにアクセスすると404ページを表示する
 	return http.ListenAndServe(":"+config.Config.Port, nil)
