@@ -3,6 +3,7 @@ package controllers
 import (
 	"log"
 	"net/http"
+	"todo_app_ud_golang/app/models"
 )
 
 func top(w http.ResponseWriter, r *http.Request) {
@@ -65,6 +66,48 @@ func todoSave(w http.ResponseWriter, r *http.Request) {
 		// 上記で解析、取得したパラメータのうちPostFormValueのname項目のvalueを指定して取得
 		context := r.PostFormValue("content")
 		if err := user.CreateTodo(context); err != nil {
+			log.Println(err)
+		}
+		http.Redirect(w, r, "/todos", 302)
+	}
+}
+
+func todoEdit(w http.ResponseWriter, r *http.Request, id int) {
+	sess, err := session(w, r)
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+	} else {
+		_, err := sess.GetUserBySession()
+		if err != nil {
+			log.Println(err)
+		}
+		t, err := models.GetTodo(id)
+		if err != nil {
+			log.Println(err)
+		}
+		generateHTML(w, t, "layout", "private_navbar", "todo_edit")
+	}
+}
+
+func todoUpdate(w http.ResponseWriter, r *http.Request, id int) {
+	sess, err := session(w, r)
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+	} else {
+		err := r.ParseForm()
+		if err != nil {
+			log.Println(err)
+		}
+		user, err := sess.GetUserBySession()
+		if err != nil {
+			log.Println(err)
+		}
+		content := r.PostFormValue("content")
+		// $models.Todoにて空のTodoの構造体を作成
+		t := &models.Todo{ID: id, Content: content, UserID: user.ID}
+		// t.UpdateTodo()は上記の新規Todoを引数で受け取り、データベース上のデータを置き換える
+		// 既存のデータを置き換えるのではなく、データを一から作成してそのデータを同じID上に上書きする
+		if err := t.UpdateTodo(); err != nil {
 			log.Println(err)
 		}
 		http.Redirect(w, r, "/todos", 302)
