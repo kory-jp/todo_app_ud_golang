@@ -38,3 +38,35 @@ func index(w http.ResponseWriter, r *http.Request) {
 		generateHTML(w, user, "layout", "private_navbar", "index")
 	}
 }
+
+func todoNew(w http.ResponseWriter, r *http.Request) {
+	_, err := session(w, r)
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+	} else {
+		generateHTML(w, nil, "layout", "private_navbar", "todo_new")
+	}
+}
+
+func todoSave(w http.ResponseWriter, r *http.Request) {
+	sess, err := session(w, r)
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+	} else {
+		// フォームに入力されたデータを解析,パラメータを全て取得するためParseForm
+		err = r.ParseForm()
+		if err != nil {
+			log.Println(err)
+		}
+		user, err := sess.GetUserBySession()
+		if err != nil {
+			log.Println(err)
+		}
+		// 上記で解析、取得したパラメータのうちPostFormValueのname項目のvalueを指定して取得
+		context := r.PostFormValue("content")
+		if err := user.CreateTodo(context); err != nil {
+			log.Println(err)
+		}
+		http.Redirect(w, r, "/todos", 302)
+	}
+}
