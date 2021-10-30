@@ -3,6 +3,8 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"regexp"
+	"strconv"
 	"text/template"
 	"todo_app_ud_golang/app/models"
 	"todo_app_ud_golang/config"
@@ -35,6 +37,29 @@ func session(w http.ResponseWriter, r *http.Request) (sess models.Session, err e
 	return sess, err
 }
 
+// 正規表現の型を定義
+var validPath = regexp.MustCompile("^/todos/(edit|update)/([0-9]+)$")
+
+// URLに含まれているtodoIDを解析して取得、戻り値として返却
+func parseURL(fn func(http.ResponseWriter, *http.Request, int)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// 正規表現に一致したURLであるか確認
+		q := validPath.FindStringSubmatch(r.URL.Path)
+		if q == nil {
+			http.NotFound(w, r)
+			return
+		}
+		// [0]edit/[1](edit|update)/[2]IDのID部分を抽出、string変換返却
+		qi, err := strconv.Atoi(q[2])
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+
+		fn(w, r, qi)
+	}
+}
+
 func StartMainServer() error {
 	// Config.goのStatic(静的ファイル)を定義
 	files := http.FileServer(http.Dir(config.Config.Static))
@@ -55,6 +80,10 @@ func StartMainServer() error {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/todos/new", todoNew)
 	http.HandleFunc("/todos/save", todoSave)
+	// edit"/"のように最後に/をつけると/の部分のみ完全一致していることを求められる(/が末尾についてないとURL全体が完全一致を求められる)
+	// parseURL(todoEdit)は初めにparseURLにてIDを取得して、そのIDをもとにtodoEditページを作成、遷移のような流れになる(ハンドラ関数のチェイン)
+	http.HandleFunc("/todos/edit/", parseURL(todoEdit))
+	http.HandleFunc("/todos/update/", parseURL(todoUpdate))
 	// サーバーの起動
 	// 第二引数にnilを渡すと存在しないページにアクセスすると404ページを表示する
 	return http.ListenAndServe(":"+config.Config.Port, nil)
