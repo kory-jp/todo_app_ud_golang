@@ -38,7 +38,7 @@ func session(w http.ResponseWriter, r *http.Request) (sess models.Session, err e
 }
 
 // 正規表現の型を定義
-var validPath = regexp.MustCompile("^/todos/(edit|update)/([0-9]+)$")
+var validPath = regexp.MustCompile("^/todos/(edit|update|delete)/([0-9]+)$")
 
 // URLに含まれているtodoIDを解析して取得、戻り値として返却
 func parseURL(fn func(http.ResponseWriter, *http.Request, int)) http.HandlerFunc {
@@ -84,6 +84,7 @@ func StartMainServer() error {
 	// parseURL(todoEdit)は初めにparseURLにてIDを取得して、そのIDをもとにtodoEditページを作成、遷移のような流れになる(ハンドラ関数のチェイン)
 	http.HandleFunc("/todos/edit/", parseURL(todoEdit))
 	http.HandleFunc("/todos/update/", parseURL(todoUpdate))
+	http.HandleFunc("/todos/delete/", parseURL(todoDelete))
 	// サーバーの起動
 	// 第二引数にnilを渡すと存在しないページにアクセスすると404ページを表示する
 	return http.ListenAndServe(":"+config.Config.Port, nil)
