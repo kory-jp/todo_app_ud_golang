@@ -16,6 +16,7 @@ type ConfigList struct {
 	Static    string
 }
 
+// valueは未設定でグローバルな変数Configを設定
 var Config ConfigList
 
 func init() {
@@ -24,11 +25,13 @@ func init() {
 }
 
 func LoadConfig() {
+	// ./iniファイルの読み込み
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	Config = ConfigList{
+		// MustStringはiniファイルに値が無かった場合、8080が初期値として設定される
 		Port:      cfg.Section("web").Key("port").MustString("8080"),
 		SQLDriver: cfg.Section("db").Key("driver").String(),
 		Dbname:    cfg.Section("db").Key("name").String(),
