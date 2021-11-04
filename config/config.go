@@ -10,9 +10,12 @@ import (
 
 type ConfigList struct {
 	Port      string
-	SQLDriver string
-	Dbname    string
 	LogFile   string
+	SQLDriver string
+	UserName  string
+	Password  string
+	DBPort    string
+	DBname    string
 	Static    string
 }
 
@@ -33,9 +36,12 @@ func LoadConfig() {
 	Config = ConfigList{
 		// MustStringはiniファイルに値が無かった場合、8080が初期値として設定される
 		Port:      cfg.Section("web").Key("port").MustString("8080"),
-		SQLDriver: cfg.Section("db").Key("driver").String(),
-		Dbname:    cfg.Section("db").Key("name").String(),
 		LogFile:   cfg.Section("web").Key("logfile").String(),
+		SQLDriver: cfg.Section("db").Key("driver").String(),
+		UserName:  cfg.Section("db").Key("user_name").String(),
+		Password:  cfg.Section("db").Key("password").String(),
+		DBPort:    cfg.Section("db").Key("port").String(),
+		DBname:    cfg.Section("db").Key("db_name").String(),
 		Static:    cfg.Section("web").Key("static").String(),
 	}
 }
