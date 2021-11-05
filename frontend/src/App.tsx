@@ -7,7 +7,7 @@ function App() {
   return (
     <>
     <BrowserRouter>
-    <p>APP</p>
+    <p>APP/logo/test</p>
       <Router/>
     </BrowserRouter>
     </>
