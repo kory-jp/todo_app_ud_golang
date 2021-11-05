@@ -1,6 +1,7 @@
 import EditTodo from "../components/pages/EditTodo";
 import Index from "../components/pages/Index";
 import NewTodo from "../components/pages/NewTodo";
+import Page404 from "../components/pages/Page404";
 
 
 export const todoRoutes = [
@@ -18,5 +19,10 @@ export const todoRoutes = [
     path: "/edit",
     exact: false,
     children: <EditTodo/>
+  },
+  {
+    path: "*",
+    exact: false,
+    children: <Page404/>
   }
 ]
