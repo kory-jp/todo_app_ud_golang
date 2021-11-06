@@ -1,8 +1,11 @@
-import { VFC } from "react"
+import { useCallback, VFC } from "react"
 import { Box, Flex, Heading, Divider, Input, Stack } from "@chakra-ui/react"
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
+import { useHistory } from "react-router";
 
 export const Singup: VFC = () => {
+  const history = useHistory()
+  const onClickIndex = useCallback(()=> history.push("/todo"),[history])
   return(
     <Flex align="center" justify="center" h="100vh">
     <Box
@@ -28,7 +31,9 @@ export const Singup: VFC = () => {
         <Input
           placeholder="パスワード"
           />
-          <PrimaryButton>
+          <PrimaryButton
+            onClick={onClickIndex}
+          >
             ログイン
           </PrimaryButton>
       </Stack>
