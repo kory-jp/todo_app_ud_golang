@@ -6,7 +6,7 @@ export const Header: VFC = () => {
   const history = useHistory()
   const onClickTop = useCallback(()=> history.push("/"),[history])
   const onClickLogin = useCallback(()=> history.push("/login"),[history])
-  const onClickSignup = useCallback(()=> history.push("/Signup"),[history])
+  const onClickSignup = useCallback(()=> history.push("/signup"),[history])
   return(
     <Flex bg="telegram.500" justifyContent="space-between">
       <Box ml="16">
